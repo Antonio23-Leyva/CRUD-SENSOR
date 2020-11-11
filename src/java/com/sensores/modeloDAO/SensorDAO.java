@@ -27,7 +27,7 @@ public class SensorDAO implements InterfazSensorDAO {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Sensor s = new Sensor();
-                s.setId((char) rs.getInt(1));
+                s.setId(rs.getInt(1));
                 s.setDescripcion(rs.getString(2));
                 s.setHumedad(rs.getString(3));
                 s.setModelo(rs.getString(4));
@@ -44,22 +44,21 @@ public class SensorDAO implements InterfazSensorDAO {
 
     @Override
     public Sensor getId(int id) {
-        String sql = "select * from sensores.sensor where id = " + id;
+        String sql = "SELECT * FROM sensores.sensor WHERE id = " + id;
         Sensor sensor = new Sensor();
         try {
-            PreparedStatement ps = Conexion.Conectar().prepareCall(sql);
-            ps.setInt(1, id);
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+           // ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-
-                sensor.setId((char) rs.getInt(1));
+                sensor.setId(rs.getInt(1));
                 sensor.setDescripcion(rs.getString(2));
                 sensor.setHumedad(rs.getString(3));
                 sensor.setModelo(rs.getString(4));
                 sensor.setNombre(rs.getString(5));
                 sensor.setTemperatura(rs.getString(6));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error en sensorDAO" + e);
         }
         return sensor;
@@ -70,7 +69,7 @@ public class SensorDAO implements InterfazSensorDAO {
         int resultado = 0;
         String sql = "insert into sensores.sensor(id,descripcion,humedad,modelo,nombre,temperatura)values(?,?,?,?,?,?)";
         try {
-            PreparedStatement ps = Conexion.Conectar().prepareCall(sql);
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
             ps.setString(1,String.valueOf(s.getId()));
             ps.setString(2,s.getDescripcion());
             ps.setString(3,s.getHumedad());
@@ -87,16 +86,21 @@ public class SensorDAO implements InterfazSensorDAO {
 
     @Override
     public int update(Sensor s) {
-        int resultado = 0;
-        String sql = "update sensores.sensor set id=?,descripcion=?,humedad=?,modelo=?,nombre=?,temperatura=? where id=?)values(?,?,?,?,?,?)";
+        int respuesta = 0;
+        String sql = "update sensores.sensor set descripcion=?,humedad=?,modelo=?,nombre=?,temperatura=? where id=?";
         try {
-            PreparedStatement ps = Conexion.Conectar().prepareCall(sql);
-            resultado = ps.executeUpdate();
-        } catch (Exception e) {
-            System.out.println("Error en agregar" + e);
+            PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
+            ps.setString(1,s.getDescripcion());
+            ps.setString(2,s.getHumedad());
+            ps.setString(3,s.getModelo());
+            ps.setString(4,s.getNombre());
+            ps.setString(5,s.getTemperatura());
+            ps.setInt(6,s.getId());
+            respuesta = ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error en UPDATE" + e);
         }
-        return resultado;
-
+        return respuesta;
     }
 
     @Override

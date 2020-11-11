@@ -7,6 +7,7 @@ package com.sensores.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 
 public class Conexion {
@@ -21,7 +22,7 @@ public class Conexion {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, usuario,contraseña);
-        }catch (Exception msj){
+        }catch (ClassNotFoundException | SQLException msj){
             System.out.println("Error al conectar la bd"+ msj.getMessage());
             
         }

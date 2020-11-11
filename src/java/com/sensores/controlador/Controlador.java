@@ -63,7 +63,54 @@ public class Controlador extends HttpServlet {
                 }
             break;        
                 
-        
+            case "editar":
+                int identificador = Integer.parseInt(request.getParameter("id"));
+                Sensor sensox = dao.getId(identificador);
+                request.setAttribute("sensor", sensox);
+                request.getRequestDispatcher("editar.jsp").forward(request, response);
+            break;
+            
+            case "Actualizar":
+                int result = Integer.parseInt(request.getParameter("txtId"));;
+                int operacion = 0;
+                //String ide = request.getParameter("txtId");
+                String description = request.getParameter("txtDescripcion");
+                String humedadd = request.getParameter("txtHumedad");
+                String modeloo = request.getParameter("txtModelo");
+                String nombree = request.getParameter("txtNombre");
+                String temperaturaa = request.getParameter("txtTemperatura");
+                sensor = new Sensor(result, nombree, modeloo, description, humedadd, temperaturaa);
+                operacion = dao.update(sensor);
+                if (operacion != 0) {
+                request.setAttribute("config", "alert alert-success");
+                request.setAttribute("mensaje", "SE ACTUALIZO CORRECTAMENTE");
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                } else {
+                request.setAttribute("config", "alert alert-danger");
+                request.setAttribute("mensaje", "ERROR AL INTENTAR ACTUALIZAR DATOS");    
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+
+                }
+                request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
+            break;
+            
+            case "eliminar":      
+                int idd= Integer.parseInt(request.getParameter("id"));
+               int res = dao.delete(idd);
+               if (res != 0) {
+                request.setAttribute("config", "alert alert-success");
+                request.setAttribute("mensaje", "SE ELIMINO CORRECTAMENTE");
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                } else {
+                request.setAttribute("config", "alert alert-danger");
+                request.setAttribute("mensaje", "ERROR AL INTENTAR ELIMINAR DATO");    
+                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+
+                }
+                request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
+                break;
+            default:
+                request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
         }
     }
 

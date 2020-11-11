@@ -1,54 +1,53 @@
 <%-- 
-    Document   : nuevo
+    Document   : editar
     Author     : Luis
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html>
     <head>
-        <meta charset="UTF-8">
-        <title>Nuevo Sensor</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Editar Sensor</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
               integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    </head>
 
+    </head>
     <body>
         <div class="text-center"></div>
         <div class="container mt-4">
             <div class="col-sm-6">
-                <form action="Controlador?accion=agregar" method="POST">
+                <form action="Controlador" method="POST">
                     <div class="card">
                         <div class="card-header">
-                            <h3>Agregar nuevo sensor</h3>
+                            <h3>Editar sensor</h3>
                         </div>
 
                         <div class="card-body">
                             <div class="form-group">
 
                                 <label>Id</label>
-                                <input name="txtId" type="text" class="form-control" />
+                                <input name="txtId" value="${sensor.id}" readonly="" type="text" class="form-control" />
 
                                 <label>Descripcion</label>
-                                <input name="txtDescripcion" type="text" class="form-control" />
+                                <input name="txtDescripcion" value="${sensor.descripcion}" type="text" class="form-control" />
 
                                 <label>Humedad</label>
-                                <input name="txtHumedad" type="text" class="form-control" />
+                                <input name="txtHumedad" value="${sensor.humedad}" type="text" class="form-control" />
 
                                 <label>Modelo</label>
-                                <input name="txtModelo" type="text" class="form-control" />
+                                <input name="txtModelo" value="${sensor.modelo}" type="text" class="form-control" />
 
                                 <label>Nombre</label>
-                                <input name="txtNombre" type="text" class="form-control" />
+                                <input name="txtNombre" value="${sensor.nombre}" type="text" class="form-control" />
 
                                 <label>Temperatura</label>
-                                <input name="txtTemperatura" type="text" class="form-control" />
+                                <input name="txtTemperatura" value="${sensor.temperatura}" type="text" class="form-control" />
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="Controlador?accion=listar" type="button" class="btn btn-secondary">Atras</a>
+                            <input type="submit" value="Actualizar" name="accion" class="btn btn-success">
+                            <a href="Controlador?accion=listar" type="button" value="Atras" class="btn btn-secondary">Atras</a>
                         </div>
                     </div>
                 </form>
@@ -58,3 +57,4 @@
     </body>
 
 </html>
+

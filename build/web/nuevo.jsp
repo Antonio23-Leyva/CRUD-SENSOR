@@ -48,7 +48,7 @@
                         </div>
                         <div class="card-footer">
                             <button type="submit" class="btn btn-success">Guardar</button>
-                            <a href="Controlador?accion=listar" type="button" value="Atras" class="btn btn-secondary">Atras</a>
+                            <a href="Controlador?accion=listar" type="button" class="btn btn-secondary">Atras</a>
                         </div>
                     </div>
                 </form>
