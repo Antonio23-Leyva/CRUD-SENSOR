@@ -111,11 +111,27 @@ public class SensorDAO implements InterfazSensorDAO {
             PreparedStatement ps = Conexion.Conectar().prepareCall(sql);
             resultado = ps.executeUpdate();
 
-        } catch (Exception e) {
-            System.out.println("Erro en eliminar" + e);
+        } catch (SQLException e) {
+            System.out.println("Error en eliminar" + e);
         }
         return resultado;
 
+    }
+
+    @Override
+    public int sendRequeriments(int s) {
+        int devuelve = 0;
+        String consulta = "SELECT temperatura,"
+                                  +"humedad"
+                                  + "FROM sensores.sensor WHERE id ="+s;
+        try {
+            PreparedStatement qe = Conexion.Conectar().prepareStatement(consulta);
+            devuelve = qe.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error en enviar "+e);
+        }
+        
+       return devuelve;
     }
 
 }
