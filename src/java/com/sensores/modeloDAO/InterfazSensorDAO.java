@@ -18,6 +18,6 @@ public interface InterfazSensorDAO {
     public int add(Sensor s);
     public int update(Sensor s);
     public int delete(int id);
-    public int sendRequeriments(int s);
+    public List<Sensor> sendRequeriments();
     
 }

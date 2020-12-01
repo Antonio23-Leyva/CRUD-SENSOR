@@ -5,6 +5,7 @@
  */
 package com.sensores.controlador;
 
+import com.google.gson.Gson;
 import com.sensores.modelo.Sensor;
 import com.sensores.modeloDAO.SensorDAO;
 import java.io.IOException;
@@ -19,23 +20,23 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Luis
  */
-
 public class Controlador extends HttpServlet {
 
     private final SensorDAO dao = new SensorDAO();
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+    private List<Sensor> sensores;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String accion = request.getParameter("accion");
         Sensor sensor = new Sensor();
-        List<Sensor> sensores;
-        switch (accion){
+        switch (accion) {
             case "listar":
                 sensores = dao.listar();
                 request.setAttribute("sensores", sensores);
-                request.getRequestDispatcher("index.jsp").forward(request, response);
-            break;    
+                request.getRequestDispatcher("tabla.jsp").forward(request, response);
+                break;
             case "nuevo":
                 request.getRequestDispatcher("nuevo.jsp").forward(request, response);
-            break;
+                break;
             case "agregar":
                 int resultado;
                 String id = request.getParameter("txtId");
@@ -49,29 +50,30 @@ public class Controlador extends HttpServlet {
                 sensor.setHumedad(humedad);
                 sensor.setModelo(modelo);
                 sensor.setNombre(nombre);
-                sensor.setTemperatura(temperatura+"°C");
+                sensor.setTemperatura(temperatura + "°C");
                 resultado = dao.add(sensor);
                 if (resultado != 0) {
-                request.setAttribute("config", "alert alert-success");
-                request.setAttribute("mensaje", "SE AGREGO CORRECTAMENTE");
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                    request.setAttribute("config", "alert alert-success");
+                    request.setAttribute("mensaje", "SE AGREGO CORRECTAMENTE");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
                 } else {
-                request.setAttribute("config", "alert alert-danger");
-                request.setAttribute("mensaje", "ERROR AL INTENTAR GUARDAR DATOS EN BD");    
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                    request.setAttribute("config", "alert alert-danger");
+                    request.setAttribute("mensaje", "ERROR AL INTENTAR GUARDAR DATOS EN BD");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
 
                 }
-            break;        
-                
+                break;
+
             case "editar":
                 int identificador = Integer.parseInt(request.getParameter("id"));
                 Sensor sensox = dao.getId(identificador);
                 request.setAttribute("sensor", sensox);
                 request.getRequestDispatcher("editar.jsp").forward(request, response);
-            break;
-            
+                break;
+
             case "Actualizar":
-                int result = Integer.parseInt(request.getParameter("txtId"));;
+                int result = Integer.parseInt(request.getParameter("txtId"));
+                ;
                 int operacion = 0;
                 //String ide = request.getParameter("txtId");
                 String description = request.getParameter("txtDescripcion");
@@ -82,33 +84,48 @@ public class Controlador extends HttpServlet {
                 sensor = new Sensor(result, nombree, modeloo, description, humedadd, temperaturaa);
                 operacion = dao.update(sensor);
                 if (operacion != 0) {
-                request.setAttribute("config", "alert alert-success");
-                request.setAttribute("mensaje", "SE ACTUALIZO CORRECTAMENTE");
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                    request.setAttribute("config", "alert alert-success");
+                    request.setAttribute("mensaje", "SE ACTUALIZO CORRECTAMENTE");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
                 } else {
-                request.setAttribute("config", "alert alert-danger");
-                request.setAttribute("mensaje", "ERROR AL INTENTAR ACTUALIZAR DATOS");    
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
-
-                }
-                request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
-            break;
-            
-            case "eliminar":      
-                int idd= Integer.parseInt(request.getParameter("id"));
-               int res = dao.delete(idd);
-               if (res != 0) {
-                request.setAttribute("config", "alert alert-success");
-                request.setAttribute("mensaje", "SE ELIMINO CORRECTAMENTE");
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
-                } else {
-                request.setAttribute("config", "alert alert-danger");
-                request.setAttribute("mensaje", "ERROR AL INTENTAR ELIMINAR DATO");    
-                request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                    request.setAttribute("config", "alert alert-danger");
+                    request.setAttribute("mensaje", "ERROR AL INTENTAR ACTUALIZAR DATOS");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
 
                 }
                 request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
                 break;
+
+            case "eliminar":
+                int idd = Integer.parseInt(request.getParameter("id"));
+                int res = dao.delete(idd);
+                if (res != 0) {
+                    request.setAttribute("config", "alert alert-success");
+                    request.setAttribute("mensaje", "SE ELIMINO CORRECTAMENTE");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("config", "alert alert-danger");
+                    request.setAttribute("mensaje", "ERROR AL INTENTAR ELIMINAR DATO");
+                    request.getRequestDispatcher("mensaje.jsp").forward(request, response);
+
+                }
+                request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
+                break;
+            case "sendDates":
+                sensores = dao.sendRequeriments();
+                String json = new Gson().toJson(sensores);
+                request.setAttribute("json", json);
+//                request.startAsync();
+                request.getRequestDispatcher("SensorSends.jsp").forward(request, response);
+                
+                /**
+                 * List<MyObject> list = new ArrayList<MyObject>(); // add some
+                 * objects to the list...
+                 *
+                 * String json = new Gson().toJson(sensores);
+                 * request.setAttribute("sensoress", json);
+                 */
+                break;    
             default:
                 request.getRequestDispatcher("Controlador?accion=listar").forward(request, response);
         }
@@ -120,14 +137,12 @@ public class Controlador extends HttpServlet {
         processRequest(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-   
     @Override
     public String getServletInfo() {
         return "Short description";

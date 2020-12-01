@@ -1,0 +1,8 @@
+body{
+    background-image: url(../img/circuitos.jpg);
+    image-rendering: auto;
+}
+.mb-4, .m-0{
+  color:azure;     
+  font-family: 'Times New Roman', Times, serif;   
+}

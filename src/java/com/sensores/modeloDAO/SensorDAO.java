@@ -14,12 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SensorDAO implements InterfazSensorDAO {
+//Sensor[] sArray = gson.fromJson(jsonString, Sensor[].class);
 
     @Override
     public List<Sensor> listar() {
         List<Sensor> sensores = new ArrayList<>();
-        // Conexion con = new Conexion();
-
         String sql = "select * from sensores.sensor";
 
         try {
@@ -48,7 +47,7 @@ public class SensorDAO implements InterfazSensorDAO {
         Sensor sensor = new Sensor();
         try {
             PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
-           // ps.setInt(1, id);
+            // ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 sensor.setId(rs.getInt(1));
@@ -70,12 +69,12 @@ public class SensorDAO implements InterfazSensorDAO {
         String sql = "insert into sensores.sensor(id,descripcion,humedad,modelo,nombre,temperatura)values(?,?,?,?,?,?)";
         try {
             PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
-            ps.setString(1,String.valueOf(s.getId()));
-            ps.setString(2,s.getDescripcion());
-            ps.setString(3,s.getHumedad());
-            ps.setString(4,s.getModelo());
-            ps.setString(5,s.getNombre());
-            ps.setString(6,s.getTemperatura());
+            ps.setString(1, String.valueOf(s.getId()));
+            ps.setString(2, s.getDescripcion());
+            ps.setString(3, s.getHumedad());
+            ps.setString(4, s.getModelo());
+            ps.setString(5, s.getNombre());
+            ps.setString(6, s.getTemperatura());
             resultado = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error en agregar" + e);
@@ -90,12 +89,12 @@ public class SensorDAO implements InterfazSensorDAO {
         String sql = "update sensores.sensor set descripcion=?,humedad=?,modelo=?,nombre=?,temperatura=? where id=?";
         try {
             PreparedStatement ps = Conexion.Conectar().prepareStatement(sql);
-            ps.setString(1,s.getDescripcion());
-            ps.setString(2,s.getHumedad());
-            ps.setString(3,s.getModelo());
-            ps.setString(4,s.getNombre());
-            ps.setString(5,s.getTemperatura());
-            ps.setInt(6,s.getId());
+            ps.setString(1, s.getDescripcion());
+            ps.setString(2, s.getHumedad());
+            ps.setString(3, s.getModelo());
+            ps.setString(4, s.getNombre());
+            ps.setString(5, s.getTemperatura());
+            ps.setInt(6, s.getId());
             respuesta = ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error en UPDATE" + e);
@@ -119,19 +118,35 @@ public class SensorDAO implements InterfazSensorDAO {
     }
 
     @Override
-    public int sendRequeriments(int s) {
-        int devuelve = 0;
-        String consulta = "SELECT temperatura,"
-                                  +"humedad"
-                                  + "FROM sensores.sensor WHERE id ="+s;
+    public List<Sensor> sendRequeriments() {
+        List<Sensor> sensores = new ArrayList<>();
+        String consulta = "SELECT * FROM sensores.sensor";
         try {
-            PreparedStatement qe = Conexion.Conectar().prepareStatement(consulta);
-            devuelve = qe.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error en enviar "+e);
-        }
-        
-       return devuelve;
-    }
+            PreparedStatement qe = Conexion.Conectar().prepareCall(consulta);
+            ResultSet de = qe.executeQuery();
 
+            while (de.next()) {
+                Sensor s = new Sensor();
+                s.setId(de.getInt(1));   // id
+                s.setHumedad(de.getString(3)); // humedad
+                s.setModelo(de.getString(4)); //modelo
+                s.setTemperatura(de.getString(6)); //temperatura
+                sensores.add(s);
+// 
+//                sensores.set(1, s);
+//                sensores.get(Integer.parseInt(s.getHumedad()));
+//                sensores.get(Integer.parseInt(s.getModelo()));
+//                sensores.get(Integer.parseInt(s.getTemperatura()));
+
+//                for (int i = 0; i < sensores.size(); i++) {
+//                    System.out.println(sensores.get(i));
+//                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error en enviar " + e);
+        }
+
+        return sensores;
+
+    }
 }

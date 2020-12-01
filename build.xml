@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="CRUD_Sensores" default="default" basedir=".">
-    <description>Builds, tests, and runs the project CRUD_Sensores.</description>
+<project name="Sistema_de_Monitoreo_de_Invernadero_Sensores" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Sistema_de_Monitoreo_de_Invernadero_Sensores.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
